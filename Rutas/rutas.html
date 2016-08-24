@@ -1,0 +1,74 @@
+<!doctype html>
+<html ng-app="rutasApp">
+    <head>
+		<!-- permite funcionar las URLs sin # (modo HTML5 - ngRoute Angular 1) -->
+		<base href="/" />
+		
+		
+        <title>Usando Rutas con Angular 1</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.min.js"></script>
+        <script>
+            // se debe agregar la dependencia a ngRoute
+            angular.module('rutasApp', ['ngRoute'])
+                // Controllers
+                // $scope vincula las variables del controller con las 
+                // disponibles en la vista
+                .controller('IndexController', function($scope) {
+
+                })
+                .controller('SaludoController', function($scope){
+					$scope.nombre = "Anónimo";
+                })
+                .controller('DespedidaController', function($scope){
+					$scope.despedida = "Adios";
+                })
+
+                // Configuración rutas
+                .config(function($routeProvider, $locationProvider){
+					
+					// permite funcionar las URLs sin #
+					$locationProvider.html5Mode(true);
+
+                    $routeProvider                    
+                    .when('/hola', {
+                        controller: 'SaludoController'
+                        ,templateUrl: 'views/saludo.html'
+                    })
+                    .when('/bye', {
+                        controller: 'DespedidaController'
+                        ,templateUrl: 'views/despedida.html'
+                    });
+                })
+            ;
+
+        </script>
+    </head>
+    <body>				
+        <div class="container" ng-controller="IndexController">
+			<nav id="menu-html5-mode">
+				<ul>
+					<li>
+						<a href="/rutas.html">Inicio</a>
+						<a href="/hola">Saludo</a>
+						<a href="/bye">Despedida</a>
+					</li>
+				</ul>
+			</nav>		
+			
+            <ng-view></ng-view>            
+            
+            <!-- modo normal de ngRoute con #             
+            <nav id="menu-normal-mode">
+				<ul>
+					<li>						
+						<a href="#/hola">Saludo</a>
+						<a href="#/bye">Despedida</a>
+					</li>
+				</ul>
+			</nav>
+			-->
+			
+        </div>
+    </body>
+</html>
