@@ -1,0 +1,43 @@
+<!doctype html>
+<html ng-app="interceptorApp">
+    <head>
+        <title>El tiempo en Santiago de Chile</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+        <script>            
+            angular.module('interceptorApp', [])
+				// docs
+				//https://docs.angularjs.org/api/ng/service/$http
+				//run(): https://docs.angularjs.org/guide/module
+				.run(function($http){
+					$http.defaults.headers.common.Authorization = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjEsImV4cCI6MTQ3NTM2MzU3NTY1OH0.ibxpN15xGSqYw0hTJKU7Zh-QT51ffn7bZsVhh2M0lSw";
+				})
+                .controller('InterceptorController', function($scope, $http) {                    
+					$scope.data = "cargando...";
+                    $http({
+						method: "GET"
+						,url:'http://localhost:8080/protected'
+						// así se setea el Header uno a uno
+						/*
+						,headers:{
+							Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjEsImV4cCI6MTQ3NTM2MzU3NTY1OH0.ibxpN15xGSqYw0hTJKU7Zh-QT51ffn7bZsVhh2M0lSw"
+						}
+						*/
+					})
+                    .success(function(data){
+						$scope.data = data;
+						console.dir(data);
+                    })
+                    .error(function(){
+						console.log("Hubo un error al consultar el WS del tiempo.");						
+                    }); 
+                });
+
+        </script>
+    </head>
+    <body>
+        <div ng-controller="InterceptorController">
+            <h1>Probando el Header Bearer</h1> 
+            <p>{{data}}</p>           
+        </div>
+    </body>
+</html>
