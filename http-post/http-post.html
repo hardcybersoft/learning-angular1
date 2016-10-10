@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html ng-app="formsApp">
+<head>
+	<meta charset="utf-8">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script>
+		var app = angular.module('formsApp', []);        
+		app.controller('FormController', function($scope, $http) {
+			$scope.usuario = {};
+			
+			$scope.guardar = function(u) {
+				// para debug en pantalla y consola
+				$scope.usuario = angular.copy(u); 
+				console.dir(u);
+				console.log(u);
+				// end debug				
+				
+				$http({
+					method: "POST"					
+					, url: "http://localhost:3000/usuario"					
+					, data: u
+				}).then(					
+					// success callback
+					function(data){
+						console.dir(data);
+					}
+					// error callback
+					, function(){
+						console.log("Ocurrió un error");
+					}
+				);
+			};
+			$scope.reset = function() {
+				$scope.u = {};	
+			};
+			
+		});
+	</script>    
+	
+</head>
+<body>    
+	<div ng-controller="FormController">
+		<form name="myForm">
+			Username: <input name="username" type="text" ng-model="u.username" ng-minlength="3" ng-maxlength="10" required ng-trim="true" />
+			<p ng-show="myForm.username.$error.minlength" class="error">Mínimo 3 chars!</p>
+			<p ng-show="myForm.username.$error.maxlength" class="error">Máximo 6 chars!</p>
+			<br />
+			Password: <input type="password" value="" ng-model="u.password" />
+			<br />
+			<button type="button" ng-click="reset()">Reset</button>
+			<button type="button" ng-click="guardar(u)" ng-disabled="myForm.$invalid">Submit</button>
+			
+			<br /><br />
+			<pre>u = {{u | json}}</pre>
+			<pre>usuario = {{usuario | json}}</pre>
+			<br /><br />
+			<code>myForm.username.$error = {{myForm.username.$error}}</code><br/>
+		</form>
+	</div>
+</body>
+</html>
+
